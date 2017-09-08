@@ -23,3 +23,8 @@ Feed back are welcome to help us improvements
 Developed by D.Lucas and A.Le Boyer
 10/28/2016
 # WireWalker
+
+process_PROJECTNAME now contains a section to produce an Index file with start and end times of each deployment.
+
+
+

@@ -1,19 +1,56 @@
 % process aquarius with new protocole
 
+[pathstr,name,ext] = fileparts(mfilename);
 
-addpath /Users/aleboyer/ARNAUD/SCRIPPS/WireWalker/WireWalker_master
-addpath /Users/aleboyer/ARNAUD/SCRIPPS/WireWalker/WireWalker_master/Toolbox/
-addpath /Users/aleboyer/ARNAUD/SCRIPPS/WireWalker/WireWalker_master/Toolbox/rsktools/
-addpath /Users/aleboyer/ARNAUD/SCRIPPS/WireWalker/WireWalker_master/Toolbox/seawater/
+addpath(fullfile(cd,'Toolbox/'))
+addpath(fullfile(cd,'Toolbox/rsktools'))
+addpath(fullfile(cd,'Toolbox/seawater'))
 
 
 %% USER PART (define by user)
-WWmeta.root_data='/Volumes/LaJIT/Moorings/';
-WWmeta.root_script='/Users/aleboyer/ARNAUD/SCRIPPS/WireWalker/WireWalker_master/';
+% WWmeta.root_data='/Volumes/LaJIT/Moorings/';
+% WWmeta.root_script='/Users/aleboyer/ARNAUD/SCRIPPS/WireWalker/WireWalker_master/';
+% WWmeta.Cruise_name='LAJIT2016'; % 
+% WWmeta.WW_name='JohnWesleyPowell'; % 
+% WWmeta.deployement='d17';
+
+!bash ~/cronjobs/mount_ahua
+WWmeta.root_data= '/Volumes/Ahua/data_archive/WaveChasers-DataArchive/LaJIT/Moorings/';
+WWmeta.root_script=cd;
 WWmeta.Cruise_name='LAJIT2016'; % 
 WWmeta.WW_name='JohnWesleyPowell'; % 
-WWmeta.deployement='d17';
+WWmeta.deployement='d18';
+topfolder = '/Volumes/Ahua/data_archive/WaveChasers-DataArchive/LaJIT/Moorings/LAJIT2016/WW/JohnWesleyPowell/';
 
+%% Create or Update Index
+% assumes that there are NN deployments in directories labeled dNN
+ndeploy = str2num(WWmeta.deployement(2:end));
+if ~exist(fullfile(cd,'Index.mat'),'file')
+    %create and populate the index file
+    for ii = 1:ndeploy
+        try 
+            load(fullfile(topfolder,['d',num2str(ii)],'L1',[WWmeta.WW_name,'_grid.mat']),'RBRgrid')
+            Index.start(ii) = RBRgrid.time(1);
+            Index.end(ii) = RBRgrid.time(end);
+            Index.nprofiles(ii) = length(RBRgrid.time);
+        catch ME
+            Index.start(ii) = NaN;
+            Index.end(ii) = NaN;
+            Index.nprofiles(ii) = NaN;
+        end
+    end
+else
+    %list the deployments that have not been processed and added, and add
+    %the current deployment to the index
+            Index.start(ndeploy) = NaN;
+            Index.end(ndeploy) = NaN;
+            Index.nprofiles(ndeploy) = NaN;
+            
+            id = find(isnan(Index.start));
+            disp(['Deployments ',num2str(id), 'have not been processed'])
+end
+
+save(fullfile(topfolder,'Index.mat'),'Index')
 
 %% create path
 WWmeta.WWpath=sprintf('%s/%s/WW/%s/%s/L1/',WWmeta.root_data,...
@@ -39,9 +76,6 @@ WWmeta.telemetrypath=sprintf('%s%s/WW/%s/downloaded_data/data_mat/',WWmeta.root_
 WWmeta.compilepath=sprintf('%s%s/WW/%s/compile_deployment/',WWmeta.root_data,...
     WWmeta.Cruise_name,...
     WWmeta.WW_name);
-
-
-
 
 WWmeta.figure_path=[WWmeta.root_data 'FIGURES/LAJIT/'];
 
