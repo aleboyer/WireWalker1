@@ -25,7 +25,7 @@ topfolder = '/Volumes/Ahua/data_archive/WaveChasers-DataArchive/LaJIT/Moorings/L
 %% Create or Update Index
 % assumes that there are NN deployments in directories labeled dNN
 ndeploy = str2num(WWmeta.deployement(2:end));
-if ~exist(fullfile(cd,'Index.mat'),'file')
+if ~exist(fullfile(topfolder,'Index.mat'),'file')
     %create and populate the index file
     for ii = 1:ndeploy
         try 
@@ -41,11 +41,8 @@ if ~exist(fullfile(cd,'Index.mat'),'file')
     end
 else
     %list the deployments that have not been processed and added, and add
-    %the current deployment to the index
-            Index.start(ndeploy) = NaN;
-            Index.end(ndeploy) = NaN;
-            Index.nprofiles(ndeploy) = NaN;
-            
+    %the current deployment to the index  
+    load(fullfile(topfolder,'Index.mat'))
             id = find(isnan(Index.start));
             disp(['Deployments ',num2str(id), 'have not been processed'])
 end
@@ -90,7 +87,8 @@ process_aqd(WWmeta)
 create_profiles_aqd(WWmeta)
 create_grid_aqd(WWmeta)
 
-
+%%
 %compile
-compile_deployement(WWmeta,1:17)
+compile_deployement(WWmeta,1:length(Index.start))
+add_AQD_to_combined(WWmeta,1:10)
 
