@@ -1,8 +1,29 @@
 function [hf,ha] = plot_WW_RBRgrid(gridin,begtime,endtime,vars);
-%{'T','S','BScat','F_chla','DO'};
+% Function to make nice plots of gridded WW data.
+% possible values for vars:
+% From RBR: 'T','S','C','BScat','F_chla','F_CDOM','DO'
+% From AQD: 'u','v','w','amp'
+% From post-processing: 'n2','rho','L_ot','eps_ot','Lmin'
+%
+% in order to access all these variables, gridin should be EITHER:
+% 1) WWgrid generated from get_WW_data, OR
+% 2) WWmeta with the fields generated in process_PROJECTNAME.m
+% 
+% begtime and endtime are the range of days to plot (matlab datenum format)
+%
+% Created by M. Hamann 9/11/17
 
 if nargin<4
     vars = {'T','S','BScat','F_chla','DO'};
+end
+if nargin<3 || isempty(endtime)
+    endtime = gridin.time(end);
+end
+if nargin<2 || isempty(begtime)
+    begtime = gridin.time(1);
+end
+if ~isfield(gridin,'time')
+    gridin = get_WW_data(gridin,begtime,endtime);
 end
 
 id = find(gridin.time>=begtime & gridin.time<=endtime);
@@ -29,7 +50,11 @@ ha = MySubplot(0.05,0.15,0,0.05,0.1,0.02,1,n);
 
 for ii = 1:n
     axes(ha(ii));
-    pcolor(gridin.time(id),gridin.z,gridin.(vars{ii})(:,id));
+    if strcmp(vars{ii},'eps_ot') || strcmp(vars{ii},'n2')
+        pcolor(gridin.time(id),gridin.z,real(log10(gridin.(vars{ii})(:,id))));
+    else
+        pcolor(gridin.time(id),gridin.z,gridin.(vars{ii})(:,id));
+    end
     shading flat; axis ij
     
     c = cbstay;
@@ -43,11 +68,13 @@ for ii = 1:n
     elseif strcmp(vars{ii},'u'); caxis([-0.25 0.25]); ylabel(c,'u, m/s'); colormap(gca,redblue)
     elseif strcmp(vars{ii},'v'); caxis([-0.25 0.25]); ylabel(c,'v, m/s'); colormap(gca,redblue)
     elseif strcmp(vars{ii},'w'); caxis([-0.05 0.05]); ylabel(c,'w, m/s'); colormap(gca,redblue)
+    elseif strcmp(vars{ii},'eps_ot'); caxis([-9 -5]); ylabel(c,'\epsilon_{OT}, W/kg'); colormap(gca,parula)
+    elseif strcmp(vars{ii},'n2'); caxis([-5 -3]); ylabel(c,'N^2, s^{-2}'); colormap(gca,parula)
     else ylabel(c,vars{ii})
     end
     
     if ii == n
-        datetick
+%         datetick
     else
         set(gca,'xticklabel',[])
     end
@@ -55,3 +82,7 @@ for ii = 1:n
         title([datestr(begtime),' to ',datestr(endtime)])
     end
 end
+
+
+linkaxes(ha,'x')
+axes(ha(n)); datetick

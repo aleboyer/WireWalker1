@@ -1,6 +1,6 @@
 % process aquarius with new protocole
 
-[pathstr,name,ext] = fileparts(mfilename);
+% [pathstr,name,ext] = fileparts(mfilename);
 
 addpath(fullfile(cd,'Toolbox/'))
 addpath(fullfile(cd,'Toolbox/rsktools'))
@@ -20,6 +20,8 @@ WWmeta.root_script=cd;
 WWmeta.Cruise_name='LAJIT2016'; % 
 WWmeta.WW_name='JohnWesleyPowell'; % 
 WWmeta.deployement='d18';
+WWmeta.data_path = fullfile(WWmeta.root_data,WWmeta.Cruise_name,'WW',WWmeta.WW_name);
+WWmeta.sn = 'RBR-65798';
 topfolder = '/Volumes/Ahua/data_archive/WaveChasers-DataArchive/LaJIT/Moorings/LAJIT2016/WW/JohnWesleyPowell/';
 
 %% Create or Update Index
@@ -87,8 +89,11 @@ process_aqd(WWmeta)
 create_profiles_aqd(WWmeta)
 create_grid_aqd(WWmeta)
 
+%% create combined grids with processed fields for each deployment; update Index accordingly
+combine_addfields_WW_deployments(WWmeta,1:length(Index.start))
+
 %%
-%compile
-compile_deployement(WWmeta,1:length(Index.start))
-add_AQD_to_combined(WWmeta,1:10)
+% these compile scripts still exist, but are obsolete
+% compile_deployement(WWmeta,1:length(Index.start))
+% add_AQD_to_combined(WWmeta,1:10)
 
