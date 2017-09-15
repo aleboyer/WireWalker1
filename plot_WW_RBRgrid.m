@@ -1,4 +1,4 @@
-function [hf,ha] = plot_WW_RBRgrid(gridin,begtime,endtime,vars);
+function [hf,ha] = plot_WW_RBRgrid(gridin,begtime,endtime,vars,hf);
 % Function to make nice plots of gridded WW data.
 % possible values for vars:
 % From RBR: 'T','S','C','BScat','F_chla','F_CDOM','DO'
@@ -45,7 +45,11 @@ if ~isempty(isu2);
 end
 n = length(vars);
 
-hf = figure(153); clf; tallfigure;
+if nargin<5
+    hf = figure(153); clf; tallfigure;
+else
+    figure(hf);
+end
 ha = MySubplot(0.05,0.15,0,0.05,0.1,0.02,1,n);
 
 for ii = 1:n

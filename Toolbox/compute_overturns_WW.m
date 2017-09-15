@@ -1,4 +1,4 @@
-function [Epsout,Lmin,Lot,runlmax,Lttot,n2,p_ave]=compute_overturns_amy(p,t,s,varargin)
+function [Epsout,Lmin,Lot,runlmax,Lttot,n2,p_ave]=compute_overturns_WW(p,t,s,varargin)
 
 
 %  [Epsout,Lmin,Lot,runlmax,Lttot]= ...

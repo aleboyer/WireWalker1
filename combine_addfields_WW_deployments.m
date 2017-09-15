@@ -212,7 +212,7 @@ for jj = 1:length(WWgrid.time)
         WWgrid.T(:,jj) = interp1(Ptmp,Ttmp,WWgrid.z);
         
         [Epsout,Lmin,Lot,~,~,n2,pout]=compute_overturns_WW(Ptmp',Ttmp',Stmp',...
-            'lat',32,'lon',-117,'usetemp',0,'minotsize',0.5,'sigma',5e-6,'runlmin',sqrt(6));
+            'lat',32,'lon',-117,'usetemp',0,'minotsize',1,'sigma',5e-6,'runlmin',sqrt(6));
         
         WWgrid.L_ot(:,jj) = interp1(Ptmp,Lot,WWgrid.z);
         WWgrid.Lmin(:,jj) = interp1(Ptmp,Lmin,WWgrid.z);
