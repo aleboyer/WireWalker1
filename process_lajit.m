@@ -14,12 +14,12 @@ addpath(fullfile(cd,'Toolbox/seawater'))
 % WWmeta.WW_name='JohnWesleyPowell'; % 
 % WWmeta.deployement='d17';
 
-!bash ~/cronjobs/mount_ahua
+% AHUA MUST BE MOUNTED: !bash ~/cronjobs/mount_ahua
 WWmeta.root_data= '/Volumes/Ahua/data_archive/WaveChasers-DataArchive/LaJIT/Moorings/';
 WWmeta.root_script=cd;
 WWmeta.Cruise_name='LAJIT2016'; % 
 WWmeta.WW_name='JohnWesleyPowell'; % 
-WWmeta.deployement='d18';
+WWmeta.deployement='d19';
 WWmeta.data_path = fullfile(WWmeta.root_data,WWmeta.Cruise_name,'WW',WWmeta.WW_name);
 WWmeta.sn = 'RBR-65798';
 topfolder = '/Volumes/Ahua/data_archive/WaveChasers-DataArchive/LaJIT/Moorings/LAJIT2016/WW/JohnWesleyPowell/';
@@ -46,7 +46,9 @@ else
     %the current deployment to the index  
     load(fullfile(topfolder,'Index.mat'))
             id = find(isnan(Index.start));
+            if ~isempty(id)
             disp(['Deployments ',num2str(id), 'have not been processed'])
+            end
 end
 
 save(fullfile(topfolder,'Index.mat'),'Index')
@@ -90,7 +92,7 @@ create_profiles_aqd(WWmeta)
 create_grid_aqd(WWmeta)
 
 %% create combined grids with processed fields for each deployment; update Index accordingly
-combine_addfields_WW_deployments(WWmeta,1:length(Index.start))
+combine_addfields_WW_deployments(WWmeta,19)
 
 %%
 % these compile scripts still exist, but are obsolete

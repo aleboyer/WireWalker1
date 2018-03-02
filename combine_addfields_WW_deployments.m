@@ -184,8 +184,12 @@ for jj = 1:length(WWgrid.time)
         Ptmp = P(id)';
     else
         if ~exist('WW_all','var') || WW_all.time(end)<WWgrid.time(jj)
-            load(fullfile(WWmeta.telemetrypath,[WWmeta.sn,'_',datestr(WWgrid.time(jj),'mm'),'_',...
+            try load(fullfile(WWmeta.telemetrypath,[WWmeta.sn,'_',datestr(WWgrid.time(jj),'mm'),'_',...
                 num2str(day(WWgrid.time(jj))),'_',datestr(WWgrid.time(jj),'yyyy'),'.mat']))
+            catch
+                load(fullfile(WWmeta.telemetrypath,[WWmeta.sn,'_',datestr(WWgrid.time(jj),'mm'),'_',...
+                ['0',num2str(day(WWgrid.time(jj)))],'_',datestr(WWgrid.time(jj),'yyyy'),'.mat']))
+            end
             P2 = fastsmooth(WW_all.Ps,30,5,1)';
             idup2 = find(P2>2 & diffs(P2)<0);
             pid2 = find(diff(idup2)>1000); pid2 = [1;pid2+1;length(idup2)];
