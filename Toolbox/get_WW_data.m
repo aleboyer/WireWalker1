@@ -4,7 +4,7 @@ if endtime<begtime
     WWgrid_out = [];
     return
 end
-% Function to grab gridded WW data.
+% Function to grab gridded WW data.  
 % WWmeta should have fields generated in process_PROJECTNAME.m
 %
 % begtime and endtime are the range of days to plot (matlab datenum format)
