@@ -95,6 +95,11 @@ create_grid_aqd(WWmeta)
 %% create combined grids with processed fields for each deployment; update Index accordingly
 combine_addfields_WW_deployments(WWmeta,1:19)
 
+%% AFTER RUNNING ANY NEW PROCESSING, BE SURE TO GENERATE A NEW MASTER FILE 
+% AND SAVE IT ON KIPAPA!!!!
+WWgrid_final = get_WW_data(WWmeta,Index.start(1),Index.end(end));
+save(fullfile(WWmeta.data_path,'WWgrid_final.mat'),'WWgrid_final')
+
 %%
 % these compile scripts still exist, but are obsolete
 % compile_deployement(WWmeta,1:length(Index.start))

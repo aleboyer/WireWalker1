@@ -24,8 +24,9 @@ for ii = id_grab;
     clear WWgrid
 end
 
-id = find(diff(WWgrid_out.time) ~= 0);
 vars = fieldnames(WWgrid_out);
+% Check for repeat values
+[~,id,~] = unique(WWgrid_out.time);
 if length(id)<length(WWgrid_out.time)
     for ii = 1:length(vars);
         [m n] = size(WWgrid_out.(vars{ii}));
@@ -35,6 +36,7 @@ if length(id)<length(WWgrid_out.time)
     end
 end
 
+% Add NaN columns wherever there is a long gap in the data
 id = find(diff(WWgrid_out.time)>(1/24)); 
 if~isempty(id);
     for ii = 1:length(vars);
