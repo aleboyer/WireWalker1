@@ -1,4 +1,4 @@
-function create_grid_rbr(WWmeta)
+function create_grid_ctd(WWmeta)
 
 load([WWmeta.rbrpath 'Profiles_' WWmeta.name_rbr],'RBRprofiles')
 

@@ -1,15 +1,20 @@
-function prelim_proc_aqdII_2G(WWmeta)
+function prelim_proc_adcpII_2G(WWmeta)
 % prelim processing of the AQDII data from
 
-%load and transform aqdII data
-disp(WWmeta.aqdpath)
-f=dir([WWmeta.aqdpath '*' WWmeta.WW_name '*.mat']);
-fprintf('be carefull at the order of file in dir(%s*ad2cp*.mat) \n',WWmeta.aqdpath)
+%load and transform adcpII data
+disp(WWmeta.adcppath)
+%f=dir([WWmeta.adcppath '*' WWmeta.WW_name '*.mat']);
+f=dir(fullfile(WWmeta.adcppath,'*.mat'));
+fprintf('be carefull at the order of file in dir(%s*ad2cp*.mat) \n',WWmeta.adcppath)
 beg=zeros(1,length(f));
 cell_Data=struct([]);
 for l=1:length(f)
-    load([WWmeta.aqdpath f(l).name])
-    beg(l)=Data.Burst_Time(1);
+    load(fullfile(WWmeta.adcppath, f(l).name))
+    if isfield(Data,'Burst_Time')
+        beg(l)=Data.Burst_Time(1);
+    else
+        beg(l)=Data.Burst_MatlabTimeStamp(1);
+    end
     cell_Data{l}=Data;
     cell_Config{l}=Config;
 end
@@ -23,5 +28,12 @@ for f=1:length(Fields)
     AllData1.(field)=vertcat(AllData(:).(field));
 end
     
-eval([WWmeta.name_aqd '=AllData1;']);
-save([WWmeta.aqdpath WWmeta.name_aqd '.mat'],WWmeta.name_aqd, '-v7.3')
+
+if ~isfield(AllData1,'Burst_VelEast')
+    AllData1 = Aqd_beam2xyz2enu( AllData1);
+end
+
+
+
+eval([WWmeta.name_adcp '=AllData1;']);
+save(fullfile(WWmeta.adcppath,[WWmeta.name_adcp '.mat']),WWmeta.name_adcp, '-v7.3')

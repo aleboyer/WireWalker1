@@ -39,9 +39,9 @@ AQDgrid.z=zaxis;
 AQDgrid.time=timeaqdOK;
 if exist([WWmeta.WWpath WWmeta.WW_name '_grid.mat'],'file')
     load([WWmeta.WWpath WWmeta.WW_name '_grid.mat'],'RBRgrid')
-    save([WWmeta.WWpath WWmeta.WW_name '_grid.mat'],'RBRgrid','AQDgrid')
+    save([WWmeta.WWpath WWmeta.WW_name '_grid.mat'],'RBRgrid','AQDgrid','-v7.3')
 else
-    save([WWmeta.WWpath WWmeta.WW_name '_grid.mat'],'AQDgrid')
+    save([WWmeta.WWpath WWmeta.WW_name '_grid.mat'],'AQDgrid','-v7.3')
 end
 
 

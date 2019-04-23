@@ -1,49 +1,45 @@
 function RSK = readheaderlive(RSK)
 
-% readheaderlive - read tables that are populated in an 'live' file.
+%READHEADERLIVE - Read tables that are populated in a 'live' file.
 %
-% Syntax:  [RSK] = readheaderlive(RSK)
+% Syntax:  [RSK] = READHEADERLIVE(RSK)
 %
-% readheaderlive is a RSKtools helper function that opens the non-standars
-% populated tables of RSK 'live' files.
-% These tables are appSettings, instrumentsChannels and parameters.
-% If data is available it will open parameterKeys and thumbnailData.  
+% Opens the non-standard populated tables of RSK 'live' files. These tables
+% are appSettings, instrumentsChannels, and parameters. If data is
+% available, it will open the parameterKeys and thumbnailData tables.  
 %
 % Note: Only marine channels will be displayed.
 %
 % Inputs:
-%    RSK - 'live' file opened using RSKopen.m
+%    RSK - Structure of 'live' file opened using RSKopen.m.
 %
 % Outputs:
-%    RSK - Structure containing the logger metadata and thumbnails
+%    RSK - Structure containing logger metadata and thumbnail.
+%
+% See also: RSKopen.
 %
 % Author: RBR Ltd. Ottawa ON, Canada
 % email: support@rbr-global.com
 % Website: www.rbr-global.com
-% Last revision: 2017-04-06
+% Last revision: 2017-07-10
 
+p = inputParser;
+addRequired(p, 'RSK', @isstruct);
+parse(p, RSK)
+
+RSK = p.Results.RSK;
 
 %% Tables that are definitely in 'live'
-RSK.appSettings = mksqlite('select * from appSettings');
+RSK.appSettings = doSelect(RSK, 'select * from appSettings');
 
-RSK.instrumentChannels = mksqlite('select * from instrumentChannels');
+RSK = readparameters(RSK);
 
-RSK.parameters = mksqlite('select * from parameters');
+RSK = readsamplingdetails(RSK);
 
-
-if iscompatibleversion(RSK, 1, 13, 8)
-    RSK = readsamplingdetails(RSK);
-end
-
-if iscompatibleversion(RSK, 1, 13, 4)
-    RSK.parameterKeys = mksqlite('select * from parameterKeys'); 
-end
-
-[RSK, ~] = removeNonMarineChannels(RSK);
 
 
 %% Tables that may or may not be in 'live'
-tables = mksqlite('SELECT name FROM sqlite_master WHERE type="table"');
+tables = doSelect(RSK, 'SELECT name FROM sqlite_master WHERE type="table"');
 
 if any(strcmpi({tables.name}, 'geodata'))
     RSK = RSKreadgeodata(RSK);
@@ -53,5 +49,6 @@ if any(strcmpi({tables.name}, 'thumbnailData'))
     RSK = RSKreadthumbnail(RSK);
 end
 
+RSK = RSKreaddownsample(RSK);
 
 end

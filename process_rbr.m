@@ -1,32 +1,27 @@
-function process_rbr(WWmeta)
+function process_rbr(Meta_Data)
 
 
 % adding path 
-addpath([WWmeta.root_script 'Toolbox']);
-addpath([WWmeta.root_script 'Toolbox/rsktools']);
-addpath([WWmeta.root_script 'Toolbox/gsw_matlab_v3_02']);
-addpath([WWmeta.root_script 'Toolbox/gsw_matlab_v3_02/library']);
-addpath([WWmeta.root_script 'Toolbox/position_scripts']);
 
 
 % used in process_WW should be the name after the folder WW in dirName ;
 
-WWmeta.rbrfile=dir(fullfile(WWmeta.rbrpath,'*.rsk'));
-if length(WWmeta.rbrfile)>2;
+Meta_Data.ctdfile=dir(fullfile(Meta_Data.ctdpath,'*.rsk'));
+if length(Meta_Data.ctdfile)>2;
     fprintf('Watch out \nThere is more than one rsk file\n')
-    for j=1:length(filedir); disp(WWmeta.rbrfile(j).name);end
+    for j=1:length(filedir); disp(Meta_Data.ctdfile(j).name);end
 end
-fprintf('read rbr file is %s\n',WWmeta.rbrfile(1).name)
+fprintf('read rbr file is %s\n',Meta_Data.ctdfile(1).name)
 
 disp('RSK_wrapper--- It may take a while --- coffee time?')
 
-RSKfile= fullfile(WWmeta.rbrpath,WWmeta.rbrfile(1).name);
+RSKfile= fullfile(Meta_Data.ctdpath,Meta_Data.ctdfile(1).name);
 RSKdb=RSKopen(RSKfile);
 RSKread=RSKreaddata(RSKdb);
 rsk_struct_raw=RSK_struct(RSKread);
-eval([WWmeta.name_rbr '=rsk_struct_raw;'])
+eval([Meta_Data.name_ctd '=rsk_struct_raw;'])
 
-save(fullfile(WWmeta.rbrpath,[WWmeta.name_rbr '.mat']),WWmeta.name_rbr);
+save(fullfile(Meta_Data.ctdpath,[Meta_Data.name_ctd '.mat']),Meta_Data.name_ctd);
 
 
 

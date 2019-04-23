@@ -2,7 +2,9 @@ function out=RSK_struct(in)
 %function out=RSK_struct(in)
 
 i=0;
-for c=1:length(in.channels) % pb avec aquarius hope other cruise are fine
+%for c=1:length(in.channels) % I had to change because a test in the pool
+%in march 2019 gave me 12 channels but only 9 coloumn of data.
+for c=1:size(in.data.values,2) % 
     switch in.channels(c).longName
         case 'Pressure'
             out.P=in.data.values(:,c)-10.13;
@@ -12,7 +14,7 @@ for c=1:length(in.channels) % pb avec aquarius hope other cruise are fine
             out.C=in.data.values(:,c);
         otherwise
             i=i+1;
-            eval(sprintf('out.v%i=in.data.values(:,c)',i));
+            eval(sprintf('out.v%i=in.data.values(:,c);',i));
             eval(sprintf('out.info.v%i=in.channels(c).longName;',i));
     end
     

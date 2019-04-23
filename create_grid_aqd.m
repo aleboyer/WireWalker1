@@ -1,40 +1,40 @@
-function create_grid_aqd(WWmeta)
+function create_grid_aqd(Meta_Data)
 
-load([WWmeta.aqdpath 'Profiles_' WWmeta.name_aqd],'AQDprofiles')
+load(fullfile(Meta_Data.adcppath,['Profiles_' Meta_Data.deployment '.mat']),'ADCPProfiles')
 %get the normal upcast (mean P of the upcast ~ median P of all the mean P)
 
-Paqd=cellfun(@(x) nanmean(x.Burst_Pressure),AQDprofiles);
-timeaqd=cellfun(@(x) mean(x.Burst_MatlabTimeStamp),AQDprofiles);
+Paqd=cellfun(@(x) nanmean(x.Burst_Pressure),ADCPProfiles.dataup);
+timeaqd=cellfun(@(x) mean(x.Burst_MatlabTimeStamp),ADCPProfiles.dataup);
 
-critp= max(cellfun(@(x) max(x.Burst_Pressure),AQDprofiles))-.5*std(Paqd);
-critm= min(cellfun(@(x) min(x.Burst_Pressure),AQDprofiles))+.5*std(Paqd);
+critp= max(cellfun(@(x) max(x.Burst_Pressure),ADCPProfiles.dataup))-.5*std(Paqd);
+critm= min(cellfun(@(x) min(x.Burst_Pressure),ADCPProfiles.dataup))+.5*std(Paqd);
 indOK=(Paqd>critm & Paqd<critp);
 
 PaqdOK=Paqd(indOK);
 timeaqdOK=timeaqd(indOK);
-AQDprofilesOK=AQDprofiles(indOK);
+ADCPProfiles.dataupOK=ADCPProfiles.dataup(indOK);
 
-zaxis=0:.25:max(cellfun(@(x) max(x.Burst_Pressure),AQDprofilesOK));
+zaxis=0:.25:max(cellfun(@(x) max(x.Burst_Pressure),ADCPProfiles.dataupOK));
 Z=length(zaxis);
 
-fields=fieldnames(AQDprofiles{1});
+fields=fieldnames(ADCPProfiles.dataup{1});
 for f=1:length(fields)
     wh_field=fields{f};
-    AQDgrid.(wh_field)=zeros([Z,sum(indOK)]);
+    ADCPgrid.(wh_field)=zeros([Z,sum(indOK)]);
     for t=1:length(timeaqdOK)
-        F=AQDprofilesOK{t}.(wh_field);
-        [Psort,I]=sort(AQDprofilesOK{t}.Burst_Pressure,'descend');
+        F=ADCPProfiles.dataupOK{t}.(wh_field);
+        [Psort,I]=sort(ADCPProfiles.dataupOK{t}.Burst_Pressure,'descend');
         P_temp=(interp_sort(Psort));
-        AQDgrid.(wh_field)(:,t)=interp1(P_temp,medfilt1(F(I),10),zaxis);
+        ADCPgrid.(wh_field)(:,t)=interp1(P_temp,medfilt1(F(I),10),zaxis);
     end
 end
-AQDgrid.z=zaxis;
-AQDgrid.time=timeaqdOK;
-if exist([WWmeta.WWpath WWmeta.WW_name '_grid.mat'],'file')
-    load([WWmeta.WWpath WWmeta.WW_name '_grid.mat'],'RBRgrid')
-    save([WWmeta.WWpath WWmeta.WW_name '_grid.mat'],'RBRgrid','AQDgrid')
+ADCPgrid.z=zaxis;
+ADCPgrid.time=timeaqdOK;
+if exist(fullfile(Meta_Data.L1path,[Meta_Data.deployment '_grid.mat']),'file')
+    load(fullfile(Meta_Data.L1path,[Meta_Data.deployment '_grid.mat']),'CTDgrid')
+    save(fullfile(Meta_Data.L1path,[Meta_Data.deployment '_grid.mat']),'CTDgrid','ADCPgrid')
 else
-    save([WWmeta.WWpath WWmeta.WW_name '_grid.mat'],'AQDgrid')
+    save(fullfile(Meta_Data.adcppath,[Meta_Data.deployment '_grid.mat']),'ADCPgrid')
 end
 
 
