@@ -1,0 +1,14 @@
+GO TO website:
+https://online.xeostech.com/faces/login.xhtml?windowId=850
+login
+ajlucas@ucsd.edu
+
+password
+temp1234
+
+GO TO event log
+click on csv to download a csv file with the gps position
+
+this csv file can be read by add_drift.m
+ 
+
