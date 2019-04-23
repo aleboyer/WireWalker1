@@ -59,7 +59,7 @@ datetick
 cax=colorbar;
 xlabel(['Start date :' datestr(dnum1(1),'mm-dd-yyyy')],'fontsize',fontsize)
 set(gca,'fontsize',fontsize)
-ylabel(cax,'Vel East relative to WW','fontsize',fontsize)
+ylabel(cax,'Vel East relative  to WW','fontsize',fontsize)
 ylabel('Depth (m)','fontsize',fontsize)
 
 fig=gcf;
