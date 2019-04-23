@@ -30,23 +30,29 @@ Meta_Data.CTDpath=fullfile(Meta_Data.path_mission,...
     'ctd');
 Meta_Data.name_ctd=[Meta_Data.vehicle_name '_ctd_' Meta_Data.deployment];
 
+Meta_Data.gpsfile='/Volumes/DataDrive/WW_AQDTUTO/FOO/GPSWW/WW_location_log.csv'
+
+
 %% process rbr
 process_ctd(Meta_Data);
 % define casts using CTD data
 
 [CTDProfile.up,CTDProfile.down,CTDProfile.dataup,CTDProfile.datadown] = ...
-                           mod_getcastctd(Meta_Data,.5,3);
+                           mod_getcastctd(Meta_Data,9.1,4);
 
 create_grid_ctd(Meta_Data)
 
 %% process adcp
 
-process_aqd_2G(Meta_Data)
-create_profiles_aqd_2G(Meta_Data)
-add_drift_soda(Meta_Data)
-create_grid_aqd_2G(Meta_Data)
+prelim_proc_aqdII_2G(Meta_Data);
+[AQDProfile.up,AQDProfile.down,AQDProfile.dataup,AQDProfile.datadown] = ...
+                           mod_getcastnortek(Meta_Data,9.1,4);
 
+create_grid_aqd(Meta_Data)
+add_drift(Meta_Data)
 
+load(fullfile(Meta_Data.L1path,[Meta_Data.deployment '_grid.mat']),'CTDgrid','ADCPgrid')
+mod_WW_plotgrid(CTDgrid,ADCPgrid,Meta_Data)
 
 
 
