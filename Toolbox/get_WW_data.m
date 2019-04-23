@@ -1,7 +1,12 @@
 function WWgrid_out = get_WW_data(WWmeta,begtime,endtime)
-% Function to grab gridded WW data.
+if endtime<begtime
+    warning('Dates are out of order')
+    WWgrid_out = [];
+    return
+end
+% Function to grab gridded WW data.  
 % WWmeta should have fields generated in process_PROJECTNAME.m
-% 
+%
 % begtime and endtime are the range of days to plot (matlab datenum format)
 %
 % Created by M. Hamann 9/12/17
@@ -17,6 +22,29 @@ for ii = id_grab;
     id1 = [];
     WWgrid_out = mergefields_WW(WWgrid_out,WWgrid,id1,id2);
     clear WWgrid
+end
+
+vars = fieldnames(WWgrid_out);
+% Check for repeat values
+[~,id,~] = unique(WWgrid_out.time);
+if length(id)<length(WWgrid_out.time)
+    for ii = 1:length(vars);
+        [m n] = size(WWgrid_out.(vars{ii}));
+        if n~=1;
+            WWgrid_out.(vars{ii}) = WWgrid_out.(vars{ii})(:,id);
+        end
+    end
+end
+
+% Add NaN columns wherever there is a long gap in the data
+id = find(diff(WWgrid_out.time)>(1/24)); 
+if~isempty(id);
+    for ii = 1:length(vars);
+        [m n] = size(WWgrid_out.(vars{ii}));
+        if n~=1;
+            WWgrid_out.(vars{ii}) = add_nancolumns(WWgrid_out.(vars{ii}),id);
+        end
+    end
 end
 
 
