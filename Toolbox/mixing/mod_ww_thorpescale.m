@@ -5,10 +5,10 @@ function Profile=mod_ww_thorpescale(Profile)
 
 %Profile comes from WireWalker master processing
 % sampling frequency
-df=1/nanmean(diff(Profile.time))/86400;
+df=1/nanmean(diff(Profile.ctdtime))/86400;
 
 % Create approximate time base, assuming df as the sample frequency. df should ~6 Hz.
-startnum = Profile.time(1);% From the raw data file name.
+startnum = Profile.ctdtime(1);% From the raw data file name.
 % define Pressure
 Pressure   = Profile.P;
 Salinity   = Profile.S;

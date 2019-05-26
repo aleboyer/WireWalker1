@@ -1,4 +1,4 @@
-function mod_WW_plotgrid_aqd(CTDgrid,ADCPgrid,Meta_Data)
+function mod_WW_plotgrid_signature(CTDgrid,ADCPgrid,Meta_Data)
 
 
 
@@ -17,7 +17,7 @@ dmeta2=diff(dvals2);
 eta2m=eta(dmeta2>0,:);
 
 
-% Temp from CTDgrid
+% epsilon 1 
 fontsize=25;
 figure(1);
 colormap('parula')
@@ -42,17 +42,19 @@ print(fullfile(Meta_Data.L1path,'Temperature_map.png'),'-dpng2')
 
 
 
-%%ADCP grid
+
+% epsilon 1 
 fontsize=25;
 z=ADCPgrid.z;
 dnum1=ADCPgrid.time;
 figure(2);
 colormap('parula')
-pcolor(dnum1,z,ADCPgrid.Burst_VelEast);shading flat;axis ij
+pcolor(dnum1,z,squeeze(nanmean(ADCPgrid.Burst_VelEast(:,10:20,:),2)));shading flat;axis ij
 hold on
 plot(dnum,eta2m,'Color',[.1,.1,.1,.6],'linewidth',1)
 colorbar
-caxis([min(ADCPgrid.Burst_VelEast(:)),max(ADCPgrid.Burst_VelEast(:))])
+%caxis([min(ADCPgrid.Burst_VelEast(:)),max(ADCPgrid.Burst_VelEast(:))])
+caxis([-.2 .2])
 set(gca,'XTickLabelRotation',25)
 datetick
 cax=colorbar;

@@ -140,8 +140,10 @@ switch answer1
         ADCPProfiles.down=down;
         ADCPProfiles.dataup=dataup;
         ADCPProfiles.datadown=datadown;
-        ADCPProfiles.Units=Units;
-        ADCPProfiles.Comments=Comments;
+        if isfield(data,'Units')
+            ADCPProfiles.Units=Units;
+            ADCPProfiles.Comments=Comments;
+        end
         filepath=fullfile(Meta_Data.adcppath,['Profiles_' Meta_Data.deployment '.mat']);
         fprintf('Saving data in %s \n',filepath)
         save(filepath,'ADCPProfiles','-v7.3');

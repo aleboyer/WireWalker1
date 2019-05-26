@@ -11,7 +11,7 @@ critp= max(cellfun(@(x) max(x.P),Profiles))-.5*std(Prbr);
 critm= min(cellfun(@(x) min(x.P),Profiles))+.5*std(Prbr);
 
 
-timerbr=cellfun(@(x) mean(x.time),Profiles);
+timerbr=cellfun(@(x) mean(x.ctdtime),Profiles);
 timerbrOK=timerbr(Prbr>critm & Prbr<critp);
 indOK=(Prbr>critm & Prbr<critp);
 Profiles=Profiles(indOK);
@@ -32,10 +32,7 @@ for f=1:length(fields)
     end
 end
 CTDgrid.z=zaxis;
-CTDgrid.time=timerbrOK;
-
-CTDgrid.z=zaxis;
-CTDgrid.time=timerbrOK;
+CTDgrid.ctdtime=timerbrOK;
 CTDgrid.info=CTDProfiles.info;
 
 if exist(fullfile(Meta_Data.L1path,[Meta_Data.deployment '_grid.mat']),'file')

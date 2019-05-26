@@ -1,12 +1,12 @@
 function [dnum,z1,epsiLT,epsiAPE]=mod_ww_thorpescale_grid(Profiles,Meta_Data)
 
 z1=1:.1:max(cellfun(@(x) max(x.P),Profiles));
-df=1/nanmean(diff(Profiles{1}.time))/86400;
+df=1/nanmean(diff(Profiles{1}.ctdtime))/86400;
 fc=1/5; % 60 sec
 Nb=3;
 [b, a]   = butter(Nb,2*fc/df,'low');
 
-dnum=cell2mat(cellfun(@(x) mean(x.time),Profiles,'un',0));
+dnum=cell2mat(cellfun(@(x) mean(x.ctdtime),Profiles,'un',0));
 try
 t=cellfun(@(x) interp1(filtfilt(b,a,x.P),filtfilt(b,a,x.T),z1),Profiles,'un',0);
 s=cellfun(@(x) interp1(filtfilt(b,a,x.P),filtfilt(b,a,x.S),z1),Profiles,'un',0);

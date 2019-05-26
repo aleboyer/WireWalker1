@@ -17,7 +17,7 @@ dmeta2=diff(dvals2);
 eta2m=eta(dmeta2>0,:);
 
 
-% Temp from CTDgrid
+% epsilon 1 
 fontsize=25;
 figure(1);
 colormap('parula')
@@ -42,7 +42,8 @@ print(fullfile(Meta_Data.L1path,'Temperature_map.png'),'-dpng2')
 
 
 
-%%ADCP grid
+
+% epsilon 1 
 fontsize=25;
 z=ADCPgrid.z;
 dnum1=ADCPgrid.time;

@@ -3,7 +3,7 @@ function out=RSK_struct(in)
 
 i=0;
 %for c=1:length(in.channels) % I had to change because a test in the pool
-%in march 2019 gave me 12 channels but only 9 coloumn of data.
+%in march 2019 gave me 12 channels but only 9 column of data.
 for c=1:size(in.data.values,2) % 
     switch in.channels(c).longName
         case 'Pressure'
@@ -19,7 +19,7 @@ for c=1:size(in.data.values,2) %
     end
     
 end
-out.time=(in.data.tstamp);
+out.ctdtime=(in.data.tstamp);
 out.P(out.P<0)=0;
 out.dPdt=onedgrad(out.P,1/6);
 out.S=gsw_SP_from_C(out.C,out.T,out.P);

@@ -1,4 +1,4 @@
-function create_grid_aqd_2G(WWmeta)
+function create_grid_signature(WWmeta)
 
 load([WWmeta.aqdpath 'Profiles_' WWmeta.name_aqd],'AQDprofiles')
 %get the normal upcast (mean P of the upcast ~ median P of all the mean P)
