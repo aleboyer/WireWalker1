@@ -1,1 +1,0 @@
-function out=diffs(var)%function out=diffs(var)%Deliver the difference function, but stored in a vector the same size as the%original.  A zero is stored in the last bin.[m,n]=size(var);out=zeros(m,n);tryout(1:m-1,:)=diff(var);catch    out(:,1:n-1)=diff(var);end
